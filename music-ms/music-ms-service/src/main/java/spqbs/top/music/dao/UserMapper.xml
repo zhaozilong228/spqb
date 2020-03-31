@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spqbs.top.music.dao.UserMapper">
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+		_THIS.open_id,
+		_THIS.nick_name ,
+		_THIS.password ,
+		_THIS.gender,
+		_THIS.birth_date,
+		_THIS.address,
+		_THIS.image,
+		_THIS.introduction,
+		_THIS.session_key,
+		_THIS.last_time
+	</sql>
+	
+	<sql id="all_Favorite_Column_List">
+		_THIS.code,
+		_THIS.favorite_type ,
+		_THIS.playlist_code ,
+		_THIS.playlist_name,
+		_THIS.play_num,
+		_THIS.music_count,
+		_THIS.open_id
+	</sql>
+	
+	<sql id="userPlayListAttach_Column_List">
+		_THIS.code,
+		_THIS.playlist_name ,
+		_THIS.playlist_code,
+		_THIS.music_name,
+		_THIS.music_code,
+		_THIS.album_name,
+		_THIS.artist_name
+	</sql>
+	
+	<sql id="userLike_Column_List">
+		_THIS.code,
+		_THIS.music_name,
+		_THIS.music_code,
+		_THIS.album_name,
+		_THIS.artist_name
+		_THIS.play_num,
+		_THIS.open_id 
+	</sql>
+	
+	<sql id="userPlayList_Column_List">
+		_THIS.code,
+		_THIS.name ,
+		_THIS.paly_num ,
+		_THIS.music_count,
+		_THIS.open_id
+	</sql>
+	
+	<!-- 查询用户详细 -->
+	<select id="findOpenid" resultType="spqbs.top.music.model.User">
+		SELECT 
+		<include refid="all_Column_List"></include>
+		FROM t_user _THIS
+		WHERE  
+		_THIS.del_flag = 0 AND _THIS.open_id = #{openId}
+	</select>
+	
+	<!--查询用户列表  -->
+	<select id="findUserList" resultType="spqbs.top.music.model.User">
+		SELECT 
+		<include refid="all_Column_List"></include>
+		FROM t_user _THIS
+		WHERE  
+		_THIS.del_flag = 0
+	</select>
+	
+	<!-- 添加用户 -->
+	<insert id="saveUser">
+	INSERT INTO t_user (
+		open_id,
+		nick_name ,
+		password ,
+		gender,
+		birth_date,
+		address,
+		image,
+		introduction,
+		session_key,
+		last_time
+		)
+		VALUES
+		(
+		#{param.opneId},#{param.nickName},#{param.password},#{param.gender},
+		#{param.birth_date},#{param.address},#{param.image},#{param.introduction},
+		#{param.sessionKey},#{param.lastTime}
+		)
+	</insert>
+	
+	<!-- 添加收藏 -->
+	<insert id="addFavorite">
+		INSERT INTO t_user_favorite (
+		code,
+		favorite_type ,
+		playlist_code ,
+		playlist_name,
+		play_num,
+		music_count,
+		open_id
+		)
+		VALUES
+		(
+		#{param.code},#{param.favorite_type},#{param.playlistCode},#{param.playlistName},
+		,#{param.playNum},#{param.musicCount},#{param.opneId}
+		)
+	</insert>
+	
+	<!-- 用户收藏歌单列表 -->
+	<select id="findUserFavoriteList" resultType="spqbs.top.music.model.Favorite">
+		SELECT 
+		<include refid="all_Favorite_Column_List"></include>
+		FROM t_user_favorite _THIS
+		WHERE  
+		_THIS.del_flag = 0 AND _THIS.open_id = #{param.openId}
+	</select>
+	
+	<!-- 添加我的歌单-->
+	<insert id="addMyPalyList">
+		INSERT INTO t_user_playlist (
+		code,
+		name ,
+		paly_num ,
+		music_count,
+		open_id
+		)
+		VALUES
+		(
+		#{param.code},#{param.name},#{param.playNum},#{param.musicCount},#{param.openId}
+		)
+	</insert>
+	
+	<!-- 查询我的歌单 -->
+	<select id="findMyPalyList" resultType="spqbs.top.music.model.UserPlayList">
+		SELECT 
+		<include refid="userPlayList_Column_List"></include>
+		FROM t_user_playlist _THIS
+		WHERE  
+		_THIS.del_flag = 0 AND _THIS.open_id = #{openId}
+	</select>
+	
+	<!-- 添加歌曲到我的歌单 -->
+	<insert id="addMusicToPlayList">
+		INSERT INTO t_user_playlist_ref_attach (
+		code,
+		playlist_name,
+		playlist_code,
+		music_name,
+		music_code,
+		album_name,
+		artist_name
+		)
+		VALUES
+		(
+		#{param.code},#{param.playlistName},#{param.playlistCode},#{param.musicName},
+		#{param.musicCode},#{param.albumName},#{param.artistName}
+		)
+	</insert>
+	
+	<!-- 查询我的歌单歌曲列表  根据歌单编码查询 -->
+	<select id="findMyMusic" resultType="spqbs.top.music.model.MusicAttach">
+		SELECT 
+		<include refid="userPlayListAttach_Column_List"></include>
+		FROM t_user_playlist_ref_attach _THIS
+		WHERE  
+		_THIS.del_flag = 0 AND _THIS.playlist_code = #{playlistCode}
+	</select>
+	
+	<!-- 添加喜欢的音乐 -->
+	<insert id="addLikeMusic">
+		INSERT INTO t_user_like (
+		code,
+		music_name,
+		music_code,
+		album_name,
+		artist_name,
+		play_num,
+		open_id
+		)
+		VALUES
+		(
+		#{param.code},#{param.musicName},#{param.musicCode},#{param.albumName},
+		#{param.artistName},#{param.playNum},#{param.openId}
+		)
+	</insert>
+	
+	<!-- 查询用户喜欢的歌曲 -->
+	<select id="findLikeMusic" resultType="spqbs.top.music.model.UserLike">
+		SELECT 
+		<include refid="userLike_Column_List"></include>
+		FROM t_user_like _THIS
+		WHERE  
+		_THIS.del_flag = 0 AND _THIS.open_id = #{openId}
+	</select>
+</mapper>

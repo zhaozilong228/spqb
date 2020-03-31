@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spqbs.top.music.dao.LoginMapper">
+
+	<!-- 查询音乐列表 -->
+	<select id="findOpenid" resultType="spqbs.top.music.model.User">
+		SELECT 
+		*
+		FROM t_user _THIS
+		WHERE  _THIS.opneid = #{opneid}
+	</select>
+	<insert id="saveUser">
+	INSERT INTO t_user (
+		opne_id,
+		nick_name,
+		session_key
+		)
+		VALUES
+		(#{param.opneId},#{param.nickName},#{param.sessionKey}
+		)
+	</insert>
+</mapper>

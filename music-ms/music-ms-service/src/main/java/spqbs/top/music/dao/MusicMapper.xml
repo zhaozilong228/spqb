@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spqbs.top.music.dao.MusicMapper">
+	<!-- =========================================================== -->
+	<!-- 定义resultMap -->
+	<!-- =========================================================== -->
+<!-- 	<resultMap id="ShopActivityDefaultResultMap"
+		type="com.elink.wdt.shop.activity.model.ShopActivityModel">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="scope" property="scope" jdbcType="VARCHAR" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="can_buy_start_time" property="canBuyStartTime" />
+		<result column="can_buy_end_time" property="canBuyEndTime" />
+		<result column="on_holiday" property="onHoliday" jdbcType="BIT" />
+		<result column="on_weekend" property="onWeekend" jdbcType="BIT" />
+		<result column="card_flag" property="cardFlag" jdbcType="BIT" />
+		<result column="reduction_price" property="reductionPrice" jdbcType="BIGINT" />
+		<result column="discount_flag" property="discountFlag"
+			jdbcType="BIT" />
+		<result column="discount_rate" property="discountRate"
+			jdbcType="INTEGER" />
+		<result column="limit_num_flag" property="limitNumFlag" jdbcType="BIT" />
+	</resultMap> -->
+<!-- 
+	_THIS.ID,
+		DATE_FORMAT(_THIS.start_time, '%Y-%m-%d %H:%i:%S')as start_time,
+		DATE_FORMAT(_THIS.end_time, '%Y-%m-%d %H:%i:%S') as end_time,
+		DATE_FORMAT(_THIS.can_buy_start_time,   '%Y-%m-%d %H:%i:%S') as can_buy_start_time,
+  		DATE_FORMAT(_THIS.can_buy_end_time,   '%Y-%m-%d %H:%i:%S')as can_buy_end_time,
+ -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+		_THIS.code,
+		_THIS.name ,
+		_THIS.url ,
+		_THIS.description,
+		_THIS.tag,
+		_THIS.type,
+		_THIS.play_num,
+		_THIS.pic_url,
+		_THIS.album_name,
+		_THIS.artist_name,
+		_THIS.status
+	</sql>
+	
+	<sql id="playList_Column_List">
+		_THIS.code,
+		_THIS.name ,
+		_THIS.description,
+		_THIS.tag,
+		_THIS.cover_url,
+		_THIS.play_num,
+		_THIS.status,
+		_THIS.recommend,
+		_THIS.order_value
+	</sql>
+	<sql id="playListAttach_Column_List">
+		_THIS.playlist_name ,
+		_THIS.playlist_code,
+		_THIS.music_name,
+		_THIS.music_code,
+		_THIS.album_name,
+		_THIS.artist_name
+	</sql>
+	<sql id="rankList_Column_List">
+		_THIS.code,
+		_THIS.name ,
+		_THIS.description,
+		_THIS.tag,
+		_THIS.cover_url,
+		_THIS.play_num,
+		_THIS.status,
+		_THIS.recommend,
+		_THIS.order_value
+	</sql>
+	<sql id="rankListAttach_Column_List">
+		_THIS.ranklist_name ,
+		_THIS.ranklist_code,
+		_THIS.music_name,
+		_THIS.music_code,
+		_THIS.album_name,
+		_THIS.artist_name
+	</sql>
+	<!-- 查询音乐列表 -->
+	<select id="findList" resultType="spqbs.top.music.model.Music">
+		SELECT
+		<include refid="all_Column_List"></include>
+		FROM t_music _THIS
+		WHERE _THIS.del_flag = 0
+		<if test="param.code != null and param.code!=''">
+			AND   _THIS.id = #{param.code} 
+		</if>
+		<if test="param.name != null and param.name!=''">
+			AND _THIS.name = #{param.name} 
+		</if>
+		<if test="param.albumName != null and param.albumName!=''">
+			AND _THIS.album_name = #{param.albumName} 
+		</if>
+		<if test="param.artistName != null and param.artistName!=''">
+			AND _THIS.artist_name = #{param.artistName} 
+		</if>
+		<if test="param.status != null and param.status!=''">
+			 AND status = #{param.status} 
+		</if>
+		<if test="param.sortWay == 'time'">
+			ORDER BY _THIS.create_date DESC
+		</if>
+		<if test="param.sortWay == 'playNum'">
+			 ORDER BY _THIS.play_num DESC
+		</if>
+		<if test="param.closePage == null">
+			LIMIT ${param.size * param.page},#{param.size}
+		</if>
+	</select>
+	<!-- 添加音乐-->
+	<insert id="add">
+		INSERT INTO t_music (
+		code,
+		name,
+		url,
+		description,
+		tag,
+		type,
+		play_num,
+		pic_url,
+		album_name,
+		artist_name
+		)
+		VALUES
+		(#{param.code},#{param.name},#{param.url},
+		#{param.description},#{param.tag},#{param.type},#{param.playNum},
+		#{param.picUrl},#{param.albumName},#{param.artistName}
+		)
+	</insert>
+	<!-- 逻辑删除音乐 -->
+	<update id="delete">
+		UPDATE t_music
+		SET	 
+		del_flag = 1
+		WHERE code = #{code}
+	</update>
+	<update id="update">
+		UPDATE t_music 
+		SET	
+		del_flag = 0
+		<if test="param.name != null and param.name!=''">
+		 ,name = #{param.name} 
+		</if>
+		<if test="param.url != null and param.url!=''">
+		 ,url = #{param.url} 
+		</if> 
+		<if test="param.picUrl != null and param.picUrl!=''">
+		 ,pic_url = #{param.picUrl} 
+		</if>
+		<if test="param.tag != null and param.tag!=''">
+		 ,tag = #{param.tag} 
+		</if>
+		<if test="param.description != null and param.description!=''">
+		 ,description = #{param.description} 
+		</if>
+		<if test="param.albumName != null and param.albumName!=''">
+		 ,album_name = #{param.albumName} 
+		</if>
+		<if test="param.playNum != null and param.playNum!=''">
+		 ,play_num = #{param.playNum} 
+		</if>
+		<if test="param.artistName != null and param.artistName!=''">
+		 ,artist_name = #{param.artistName} 
+		</if>
+		<if test="param.status != null and param.status!=''">
+		 ,status = #{param.status} 
+		</if>
+		WHERE code = #{param.code}
+	</update>
+	
+	<select id="findPlayList" resultType="spqbs.top.music.model.PlayList">
+		SELECT
+		<include refid="playList_Column_List"></include>
+		FROM t_playlist _THIS
+		WHERE _THIS.del_flag = 0
+		<if test="param.status != null and param.status!=''">
+			 AND _THIS.status = #{param.status} 
+		</if>
+		ORDER BY _THIS.recommend ASC, _THIS.order_value DESC
+		<if test="param.closePage == null">
+			LIMIT ${param.size * param.page},#{param.size}
+		</if>
+	</select>
+	<!-- 添加歌单-->
+	<insert id="addPlayList">
+		INSERT INTO t_playlist (
+		code,
+		name,
+		description,
+		tag,
+		cover_url,
+		play_num,
+		recommend,
+		order_value,
+		status
+		)
+		VALUES
+		(#{param.code},#{param.name},#{param.description},
+		#{param.tag},#{param.coverUrl},#{param.playNum},
+		#{param.recommend},#{param.orderValue},#{param.status}
+		)
+	</insert>
+	<!-- 编辑歌单 -->
+	<update id="updatePlayList">
+		UPDATE t_playlist 
+		SET	
+		name = #{param.name},
+		description = #{param.description},
+		play_num = #{param.playNum},
+		tag = #{param.tag},
+		cover_url = #{param.coverUrl},
+		recommend = #{param.recommend},
+		order_value = #{param.orderValue},
+		status = #{param.status},
+		music_count = #{param.musicCount}
+		WHERE code = #{param.code}
+	</update>
+	<!-- 删除歌单 -->
+	<update id="delPlayList">
+		UPDATE t_playlist 
+		SET	
+		del_flag = 1
+		WHERE code = #{code}
+	</update>
+	<!-- 查询歌单详细 -->
+	<select id="findPlayListOne" resultType="spqbs.top.music.model.PlayList">
+		SELECT
+		<include refid="playList_Column_List"></include>
+		FROM t_playlist _THIS
+		WHERE  code =#{playlistCode}
+	</select>
+	<!-- 按歌单编码查询歌曲 -->
+	<select id="findMusicByCode" resultType="spqbs.top.music.model.MusicAttach">
+		SELECT
+		<include refid="playListAttach_Column_List"></include>
+		FROM t_playlist_ref_attach _THIS
+		WHERE _THIS.del_flag = 0 AND playlist_code = #{code}
+	</select>
+	<insert id="addPlayListAttach">
+		INSERT INTO t_playlist_ref_attach (
+		code,
+		playlist_name,
+		playlist_code,
+		music_name,
+		music_code,
+		album_name,
+		artist_name
+		)
+		VALUES
+		<foreach collection="attachList" separator="," item="param">
+			(#{param.code},#{param.playlistName},#{param.playlistCode},
+		#{param.musicName},#{param.musicCode},#{param.albumName},#{param.artistName}
+		)
+		</foreach>
+	</insert>
+	<!-- 删除歌单关联音乐 -->
+	<delete id="delPlayListAttach">
+		DELETE
+		FROM
+		t_playlist_ref_attach
+		WHERE
+		playlist_code = #{playlistCode}
+	</delete>
+	
+	<!-- 添加榜单-->
+	<insert id="addRankList">
+		INSERT INTO t_ranklist (
+		code,
+		name,
+		description,
+		tag,
+		cover_url,
+		play_num,
+		recommend,
+		order_value,
+		status
+		)
+		VALUES
+		(#{param.code},#{param.name},#{param.description},
+		#{param.tag},#{param.coverUrl},#{param.playNum},
+		#{param.recommend},#{param.orderValue},#{param.status}
+		)
+	</insert>
+	<!-- 添加榜单歌曲-->
+	<insert id="addRankListAttach">
+		INSERT INTO t_ranklist_ref_attach (
+		code,
+		ranklist_name,
+		ranklist_code,
+		music_name,
+		music_code,
+		album_name,
+		artist_name
+		)
+		VALUES
+		<foreach collection="attachList" separator="," item="param">
+			(#{param.code},#{param.ranklistName},#{param.ranklistCode},
+		#{param.musicName},#{param.musicCode},#{param.albumName},#{param.artistName}
+		)
+		</foreach>
+	</insert>
+	<!-- 查询榜单列表 -->
+	<select id="findRankPageList" resultType="spqbs.top.music.model.RankList">
+		SELECT
+		<include refid="rankList_Column_List"></include>
+		FROM t_ranklist _THIS
+		WHERE _THIS.del_flag = 0
+		<if test="param.status != null and param.status!=''">
+			 AND _THIS.status = #{param.status} 
+		</if>
+		ORDER BY _THIS.recommend ASC, _THIS.order_value DESC
+		<if test="param.closePage == null">
+			LIMIT ${param.size * param.page},#{param.size}
+		</if>
+	</select>
+	<!-- 查询榜单详细 -->
+	<select id="findRankListOne" resultType="spqbs.top.music.model.RankList">
+		SELECT
+		<include refid="rankList_Column_List"></include>
+		FROM t_ranklist _THIS
+		WHERE  _THIS.del_flag = 0 and _THIS.code = #{code}
+	</select>
+	
+	<!-- 按榜单编码查询歌曲 -->
+	<select id="findRankByCode" resultType="spqbs.top.music.model.RankAttach">
+		SELECT
+		<include refid="rankListAttach_Column_List"></include>
+		FROM t_ranklist_ref_attach _THIS
+		WHERE _THIS.del_flag = 0 AND ranklist_code = #{rankCode}
+	</select>
+	
+	<!-- 查询榜单前三首 -->
+	<select id="findRankByCodeTop" resultType="spqbs.top.music.model.RankAttach">
+		SELECT
+		<include refid="rankListAttach_Column_List"></include>
+		FROM t_ranklist_ref_attach _THIS
+		WHERE _THIS.del_flag = 0 AND ranklist_code = #{rankCode}
+		LIMIT 0,3
+	</select>
+	<!-- 删除榜单关联音乐 -->
+	<delete id="delRankAttachByCode">
+		DELETE
+		FROM
+		t_ranklist_ref_attach
+		WHERE
+		ranklist_code = #{rankCode}
+	</delete>
+	
+	<!-- 编辑榜单 -->
+	<update id="updateRankList">
+		UPDATE t_ranklist 
+		SET	
+		name = #{param.name},
+		description = #{param.description},
+		play_num = #{param.playNum},
+		cover_url = #{param.coverUrl},
+		tag = #{param.tag},
+		recommend = #{param.recommend},
+		order_value = #{param.orderValue},
+		status = #{param.status}
+		WHERE code = #{param.code}
+	</update>
+	<!-- 删除榜单 -->
+	<update id="delRankList">
+		UPDATE t_ranklist 
+		SET	
+		del_flag = 1
+		WHERE code = #{code}
+	</update>
+</mapper>
