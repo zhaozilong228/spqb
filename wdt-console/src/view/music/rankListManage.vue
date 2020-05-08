@@ -168,6 +168,12 @@ export default {
                     title: '播放量',
                 },
                 {
+                    key: 'musicCount',
+                    align: 'center',
+                    width: 80,
+                    title: '歌曲数',
+                },
+                {
                     key: 'status',
                     align: 'center',
                     width: 100,
@@ -243,6 +249,7 @@ export default {
                                 console.log('params',params)
                                 this.$refs.queryMusicRef.searchPageList(params)
                                 this.$refs.queryMusicRef.playListName = params.row.name
+                                this.$refs.queryMusicRef.rankRefParam = params
                                }
                             }
                         }, '查看歌曲'),
@@ -276,7 +283,7 @@ export default {
                                 content: `<p>确定要删除[${params.row.name}]吗？</p>`,
                                 loading: true,
                                 onOk: () => {
-                                    this.delrankList(params.row)
+                                    this.delRankList(params.row)
                                 }
                             });
                            }
@@ -438,7 +445,7 @@ export default {
          }
         },
         updateRecommend(row) {
-          if (row.recommend && row.recommend === '101'){
+          if (row.recommend && row.recommend === 101){
             this.$http.post('music/rank/recommendOff/' + row.code).then(({ resultData }) => {
               this.$Modal.remove();
               this.searchPageList()

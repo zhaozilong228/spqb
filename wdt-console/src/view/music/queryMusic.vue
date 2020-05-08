@@ -114,6 +114,14 @@ export default {
                             on: {
                               click: () => {
                                 console.log('params',params)
+                                this.$Modal.confirm({
+                                    title: '提示',
+                                    content: `<p>确定要取消[${params.row.musicName}]的关联吗？</p>`,
+                                    loading: true,
+                                    onOk: () => {
+                                        this.delPlayListAttachByCode(params.row);
+                                    }
+                                });
                                }
                             }
                         }, '取消关联')     
@@ -124,6 +132,7 @@ export default {
             contentData: [
             {name:'aaa'}
             ],
+            palyRefParam: {}
         }
     },
     created() {
@@ -165,6 +174,18 @@ export default {
             }).catch((error) => {
               console.log('查询日志异常', error);
             }); 
+        },
+        // 取消榜单中歌曲关联
+        delPlayListAttachByCode(row) {
+            this.$http.post('music/play/delPlayListAttachByCode',{
+                code: row.code,
+                playlistCode: row.playlistCode
+            }).then(({ resultData }) => {
+             this.$Modal.remove();
+             this.searchPageList(this.palyRefParam)
+          }).catch((error) => {
+            console.log('查询日志异常', error);
+          });
         }
     }
 }; 

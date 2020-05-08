@@ -194,6 +194,12 @@ export default {
                     title: '排序值',
                 },
                 {
+                    key: 'musicCount',
+                    align: 'center',
+                    width: 100,
+                    title: '歌曲数量',
+                },
+                {
                     key: 'coverUrl',
                     align: 'center',
                     width: 200,
@@ -243,6 +249,7 @@ export default {
                                 console.log('params',params)
                                 this.$refs.queryMusicRef.searchPageList(params)
                                 this.$refs.queryMusicRef.playListName = params.row.name
+                                this.$refs.queryMusicRef.palyRefParam = params.row
                                }
                             }
                         }, '查看歌曲'),

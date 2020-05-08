@@ -113,7 +113,16 @@ export default {
                             },
                             on: {
                               click: () => {
-                                console.log('params',params)
+                                // console.log('params',params)
+                                this.$Modal.confirm({
+                                    title: '提示',
+                                    content: `<p>确定要取消[${params.row.musicName}]的关联吗？</p>`,
+                                    loading: true,
+                                    onOk: () => {
+                                        this.delRankMusichByCode(params.row)
+                                    }
+                                });
+                                
                                }
                             }
                         }, '取消关联')     
@@ -124,6 +133,7 @@ export default {
             contentData: [
             {name:'aaa'}
             ],
+            rankRefParam: {}
         }
     },
     created() {
@@ -165,6 +175,18 @@ export default {
             }).catch((error) => {
               console.log('查询日志异常', error);
             }); 
+        },
+        // 取消榜单中歌曲关联
+        delRankMusichByCode(row) {
+            this.$http.post('music/rank/delRankMusichByCode',{
+                code: row.code,
+                ranklistCode: row.ranklistCode
+            }).then(({ resultData }) => {
+             this.$Modal.remove();
+             this.searchPageList(this.rankRefParam)
+          }).catch((error) => {
+            console.log('查询日志异常', error);
+          });
         }
     }
 }; 
