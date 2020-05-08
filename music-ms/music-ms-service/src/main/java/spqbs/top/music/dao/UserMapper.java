@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import spqbs.top.music.model.Favorite;
 import spqbs.top.music.model.MusicAttach;
-import spqbs.top.music.model.PlayList;
 import spqbs.top.music.model.User;
 import spqbs.top.music.model.UserLike;
 import spqbs.top.music.model.UserPlayList;
@@ -20,10 +19,12 @@ public interface UserMapper {
 	public Integer addFavorite(@Param("param") Favorite param);
 	public List<Favorite> findUserFavoriteList(@Param("param") Favorite param);
 	public Integer addMyPalyList(@Param("param") UserPlayList param);
+	public Integer updateMyPalyList(@Param("param") UserPlayList param);
 	public List<UserPlayList> findMyPalyList(@Param("openId") String openId);
-	public Integer addMusicToPlayList(@Param("param")PlayList param);
-	public MusicAttach findMyMusic(@Param("playlistCode") String playlistCode);
+	public Integer addMusicToPlayList(@Param("param")MusicAttach param);
+	public MusicAttach findMusicByPlayCodeAndMusicCode(@Param("param")MusicAttach param);
+	public List<MusicAttach> findMyMusic(@Param("playlistCode") String playlistCode);
 	public Integer addLikeMusic(@Param("param") UserLike param);
-	public UserLike findLikeMusic(@Param("openId") String openId);
-	
+	public List<UserLike> findLikeMusic(@Param("openId") String openId);
+	public Integer findLikeMusicCount(@Param("openId") String openId);	
 }

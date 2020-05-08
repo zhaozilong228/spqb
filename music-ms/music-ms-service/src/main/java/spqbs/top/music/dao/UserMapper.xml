@@ -52,7 +52,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		_THIS.name ,
 		_THIS.paly_num ,
 		_THIS.music_count,
-		_THIS.open_id
+		_THIS.open_id,
+		_THIS.pic_url
 	</sql>
 	
 	<!-- 查询用户详细 -->
@@ -99,8 +100,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="addFavorite">
 		INSERT INTO t_user_favorite (
 		code,
-		favorite_type ,
-		playlist_code ,
+		favorite_type,
+		playlist_code,
 		playlist_name,
 		play_num,
 		music_count,
@@ -108,8 +109,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)
 		VALUES
 		(
-		#{param.code},#{param.favorite_type},#{param.playlistCode},#{param.playlistName},
-		,#{param.playNum},#{param.musicCount},#{param.opneId}
+		#{param.code},#{param.favoriteType},#{param.playlistCode},#{param.playlistName},
+		#{param.playNum},#{param.musicCount},#{param.openId}
 		)
 	</insert>
 	
@@ -129,11 +130,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		name ,
 		paly_num ,
 		music_count,
-		open_id
+		open_id,
+		pic_url
 		)
 		VALUES
 		(
-		#{param.code},#{param.name},#{param.playNum},#{param.musicCount},#{param.openId}
+		#{param.code},#{param.name},#{param.playNum},#{param.musicCount},#{param.openId},#{param.picUrl}
 		)
 	</insert>
 	
@@ -163,7 +165,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{param.musicCode},#{param.albumName},#{param.artistName}
 		)
 	</insert>
-	
+	<!-- 查询歌单中是否存在改歌曲 -->
+	<select id="findMusicByPlayCodeAndMusicCode" resultType="spqbs.top.music.model.MusicAttach">
+		SELECT 
+		<include refid="userPlayListAttach_Column_List"></include>
+		FROM t_user_playlist_ref_attach _THIS
+		WHERE  
+		_THIS.del_flag = 0 AND _THIS.playlist_code = #{param.playlistCode} AND _THIS.music_code = #{param.musicCode}
+	</select>
+	<!-- 修改用户歌单的音乐数量和封面-->
+	<update id="updateMyPalyList">
+	UPDATE t_user_playlist 
+		SET	
+		pic_url = #{param.picUrl},
+		music_count = music_count + 1
+		WHERE code = #{param.code}
+	</update>
 	<!-- 查询我的歌单歌曲列表  根据歌单编码查询 -->
 	<select id="findMyMusic" resultType="spqbs.top.music.model.MusicAttach">
 		SELECT 
@@ -195,6 +212,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="findLikeMusic" resultType="spqbs.top.music.model.UserLike">
 		SELECT 
 		<include refid="userLike_Column_List"></include>
+		FROM t_user_like _THIS
+		WHERE  
+		_THIS.del_flag = 0 AND _THIS.open_id = #{openId}
+	</select>
+	
+	<select id="findLikeMusicCount" resultType="Integer">
+		SELECT count(*)
 		FROM t_user_like _THIS
 		WHERE  
 		_THIS.del_flag = 0 AND _THIS.open_id = #{openId}

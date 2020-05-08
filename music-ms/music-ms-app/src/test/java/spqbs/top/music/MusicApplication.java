@@ -1,4 +1,4 @@
-package spqbs.top;
+package spqbs.top.music;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

@@ -46,7 +46,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		_THIS.pic_url,
 		_THIS.album_name,
 		_THIS.artist_name,
-		_THIS.status
+		_THIS.status,
+		_THIS.lrc_code
 	</sql>
 	
 	<sql id="playList_Column_List">
@@ -58,9 +59,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		_THIS.play_num,
 		_THIS.status,
 		_THIS.recommend,
-		_THIS.order_value
+		_THIS.order_value,
+		_THIS.music_count
 	</sql>
 	<sql id="playListAttach_Column_List">
+		_THIS.code,
 		_THIS.playlist_name ,
 		_THIS.playlist_code,
 		_THIS.music_name,
@@ -77,9 +80,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		_THIS.play_num,
 		_THIS.status,
 		_THIS.recommend,
-		_THIS.order_value
+		_THIS.order_value,
+		_THIS.music_count
 	</sql>
 	<sql id="rankListAttach_Column_List">
+		_THIS.code,
 		_THIS.ranklist_name ,
 		_THIS.ranklist_code,
 		_THIS.music_name,
@@ -94,16 +99,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM t_music _THIS
 		WHERE _THIS.del_flag = 0
 		<if test="param.code != null and param.code!=''">
-			AND   _THIS.id = #{param.code} 
+			AND   _THIS.code = #{param.code} 
 		</if>
 		<if test="param.name != null and param.name!=''">
-			AND _THIS.name = #{param.name} 
+			AND _THIS.name LIKE CONCAT('%', #{param.name}, '%') 
 		</if>
 		<if test="param.albumName != null and param.albumName!=''">
-			AND _THIS.album_name = #{param.albumName} 
+			AND _THIS.album_name LIKE CONCAT('%', #{param.albumName}, '%')
 		</if>
 		<if test="param.artistName != null and param.artistName!=''">
-			AND _THIS.artist_name = #{param.artistName} 
+			AND _THIS.artist_name LIKE CONCAT('%', #{param.artistName}, '%')  
 		</if>
 		<if test="param.status != null and param.status!=''">
 			 AND status = #{param.status} 
@@ -116,6 +121,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		<if test="param.closePage == null">
 			LIMIT ${param.size * param.page},#{param.size}
+		</if>
+	</select>
+	<!-- 按音乐编码查询 -->
+	<select id="findMusicOne" resultType="spqbs.top.music.model.Music">
+		SELECT
+		<include refid="all_Column_List"></include>
+		FROM t_music _THIS
+		WHERE _THIS.del_flag = 0
+		<if test="param.code != null and param.code!=''">
+			AND   _THIS.code = #{param.code} 
 		</if>
 	</select>
 	<!-- 添加音乐-->
@@ -226,6 +241,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		music_count = #{param.musicCount}
 		WHERE code = #{param.code}
 	</update>
+	<!-- 歌单歌曲数量减1 -->
+	<update id="playCountSub">
+		UPDATE t_playlist 
+		SET	
+		music_count = music_count-1
+		WHERE code = #{code}
+	</update>
 	<!-- 删除歌单 -->
 	<update id="delPlayList">
 		UPDATE t_playlist 
@@ -272,7 +294,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE
 		playlist_code = #{playlistCode}
 	</delete>
-	
+	<!--  按附件code删除歌单关联音乐-->
+	<delete id="delPlayListAttachByCode">
+		DELETE
+		FROM
+		t_playlist_ref_attach
+		WHERE
+		code = #{code}
+	</delete>
 	<!-- 添加榜单-->
 	<insert id="addRankList">
 		INSERT INTO t_ranklist (
@@ -284,12 +313,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		play_num,
 		recommend,
 		order_value,
-		status
+		status,
+		music_count
 		)
 		VALUES
 		(#{param.code},#{param.name},#{param.description},
 		#{param.tag},#{param.coverUrl},#{param.playNum},
-		#{param.recommend},#{param.orderValue},#{param.status}
+		#{param.recommend},#{param.orderValue},#{param.status},#{param.musicCount}
 		)
 	</insert>
 	<!-- 添加榜单歌曲-->
@@ -356,7 +386,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE
 		ranklist_code = #{rankCode}
 	</delete>
-	
+	<!--  按附件code删除单关关联音乐-->
+	<delete id="delRankMusichByCode">
+		DELETE
+		FROM
+		t_ranklist_ref_attach
+		WHERE
+		code = #{code}
+	</delete>
 	<!-- 编辑榜单 -->
 	<update id="updateRankList">
 		UPDATE t_ranklist 
@@ -368,8 +405,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		tag = #{param.tag},
 		recommend = #{param.recommend},
 		order_value = #{param.orderValue},
-		status = #{param.status}
+		status = #{param.status},
+		music_count = #{param.musicCount}
 		WHERE code = #{param.code}
+	</update>
+	<!-- 榜单歌曲数减1 -->
+	<update id="rankCountSub">
+		UPDATE t_ranklist 
+		SET	
+		music_count = music_count -1
+		WHERE code = #{code}
 	</update>
 	<!-- 删除榜单 -->
 	<update id="delRankList">

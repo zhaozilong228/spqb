@@ -53,25 +53,26 @@ public class PalylistServiceImpl implements IPlaylistService{
 		if (play ==null){
 			return "fail";
 		}else{
-			if(!"".equals(param.getName())){
+			
+			if(StringUtils.isNotBlank(param.getName())){
 				play.setName(param.getName());
 			}
-			if(!"".equals(param.getDescription())){
+			if(StringUtils.isNotBlank(param.getDescription())){
 				play.setDescription(param.getDescription());
 			}
-			if(!"".equals(param.getCoverUrl())){
+			if(StringUtils.isNotBlank(param.getCoverUrl())){
 				play.setCoverUrl(param.getCoverUrl());
 			}
-			if(!"".equals(param.getTag())){
+			if(StringUtils.isNotBlank(param.getTag())){
 				play.setTag(param.getTag());
 			}
-			if(!"".equals(param.getPlayNum())){
+			if(!"".equals(param.getPlayNum())&& param.getPlayNum() !=null){
 				play.setPlayNum(param.getPlayNum());
 			}
-			if(!"".equals(param.getOrderValue())){
+			if(!"".equals(param.getOrderValue())&& param.getOrderValue()!=null){
 				play.setOrderValue(param.getOrderValue());
 			}
-			if(!"".equals(param.getMusicCount())){
+			if(!"".equals(param.getMusicCount())&& param.getMusicCount()!=null){
 				play.setMusicCount(param.getMusicCount());
 			}
 			musicMapper.updatePlayList(play);
@@ -136,5 +137,10 @@ public class PalylistServiceImpl implements IPlaylistService{
 	@Override
 	public Integer delPlayList(String code) {
 		return musicMapper.delPlayList(code);
+	}
+	@Override
+	public Integer delPlayListAttachByCode(String code,String palyCode) {
+			musicMapper.playCountSub(code);
+		return musicMapper.delPlayListAttachByCode(code);
 	}
 }

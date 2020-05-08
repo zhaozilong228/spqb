@@ -1,6 +1,5 @@
 package spqbs.top.music.common.rest;
 
-
 /**
  * rest·µ»ØÖµµÄ±àºÅ
  * @author Liu Wenjie

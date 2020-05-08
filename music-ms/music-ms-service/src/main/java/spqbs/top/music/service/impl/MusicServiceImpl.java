@@ -22,7 +22,7 @@ public class MusicServiceImpl  implements IMusicService{
 		return new Page<Music>(resultList,resulCount.size());
 	}
 	public String add(Music saveParam) {
-		// ÔİÊ±ÓÃÊ±¼ä´Á×÷Îªcode		
+		// ï¿½ï¿½Ê±ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Îªcode		
 		String code = UUID.randomUUID().toString().replace("-", "");
 		saveParam.setCode(code);
 		musicMapper.add(saveParam);
@@ -30,7 +30,7 @@ public class MusicServiceImpl  implements IMusicService{
 	}
 	public String delete(String code) {
 		Integer num = musicMapper.delete(code);
-		return num >0 ? "É¾³ı³É¹¦": "É¾³ıÊ§°Ü";
+		return num >0 ? "åˆ é™¤æˆåŠŸ": "åˆ é™¤å¤±è´¥";
 	}
 	public Integer update(Music updateParam) {
 		return musicMapper.update(updateParam);
@@ -50,6 +50,10 @@ public class MusicServiceImpl  implements IMusicService{
 		updateParam.setStatus("102");
 		musicMapper.update(updateParam);
 		return null;
+	}
+	@Override
+	public Music findMusicOne(Music param) {
+		return musicMapper.findMusicOne(param);
 	}
 	
 

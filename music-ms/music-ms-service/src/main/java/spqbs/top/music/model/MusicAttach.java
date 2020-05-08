@@ -34,6 +34,14 @@ public class MusicAttach extends PageableParam implements Serializable{
 	   * 歌手名称
 	   */
 	  private String artistName ;
+	  /**
+	   * 用户歌单封面
+	   */
+	  private String palyCoverUrl;
+	  /**
+	   * 用户歌单歌曲数量
+	   */
+	  private Integer musicCount;
 	  
 	public String getCode() {
 		return code;
@@ -91,13 +99,27 @@ public class MusicAttach extends PageableParam implements Serializable{
 		this.artistName = artistName;
 	}
 
+	public String getPalyCoverUrl() {
+		return palyCoverUrl;
+	}
+
+	public void setPalyCoverUrl(String palyCoverUrl) {
+		this.palyCoverUrl = palyCoverUrl;
+	}
+
+	public Integer getMusicCount() {
+		return musicCount;
+	}
+
+	public void setMusicCount(Integer musicCount) {
+		this.musicCount = musicCount;
+	}
+
 	@Override
 	public String toString() {
 		return "MusicAttach [code=" + code + ", playlistName=" + playlistName + ", playlistCode=" + playlistCode
 				+ ", musicName=" + musicName + ", musicCode=" + musicCode + ", albumName=" + albumName + ", artistName="
-				+ artistName + "]";
+				+ artistName + ", palyCoverUrl=" + palyCoverUrl + ", musicCount=" + musicCount + "]";
 	}
-
 	
-
 }

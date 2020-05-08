@@ -11,5 +11,7 @@ public interface IMusicService {
 	public Integer update (Music param);
     public String statusOn(String code);
     public String statusOff(String code);
+    public Music findMusicOne(Music param);
+    
   
 }

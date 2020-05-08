@@ -1,4 +1,4 @@
-package spqbs.top;
+package spqbs.top.music.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,9 @@ public class PalyController {
 	@RequestMapping("/addPlayList")
 	public RestResult addPlayList(@RequestBody PlayList saveParam){
 		saveParam.setStatus("102");
-		saveParam.setRecommend(101);
-		if(saveParam.getOrderValue() ==null){
+		saveParam.setRecommend(102);
+		saveParam.setMusicCount(0);
+		if("".equals(saveParam.getOrderValue()) && saveParam.getOrderValue() ==null){
 			saveParam.setOrderValue(0);
 		}
 		return RestResult.success(playlistServiceImpl.addPlayList(saveParam));
@@ -79,5 +80,10 @@ public class PalyController {
 	@RequestMapping("/delPlayList/{code}")
 	public RestResult delPlayList(@PathVariable String code ){
 		return RestResult.success(playlistServiceImpl.delPlayList(code));
+	}
+	
+	@RequestMapping("/delPlayListAttachByCode")
+	public RestResult delPlayListAttachByCode(@RequestBody MusicAttach delParam ){
+		return RestResult.success(playlistServiceImpl.delPlayListAttachByCode(delParam.getCode(),delParam.getPlaylistCode()));
 	}
 }

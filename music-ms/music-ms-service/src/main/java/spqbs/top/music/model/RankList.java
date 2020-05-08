@@ -17,6 +17,7 @@ public class RankList extends PageableParam implements Serializable{
 	private Integer recommend;
 	private String status;
 	private List<RankAttach> previewMusicList;
+	private Integer musicCount;
 	public String getCode() {
 		return code;
 	}
@@ -77,11 +78,19 @@ public class RankList extends PageableParam implements Serializable{
 	public void setPreviewMusicList(List<RankAttach> previewMusicList) {
 		this.previewMusicList = previewMusicList;
 	}
+	public Integer getMusicCount() {
+		return musicCount;
+	}
+	public void setMusicCount(Integer musicCount) {
+		this.musicCount = musicCount;
+	}
 	@Override
 	public String toString() {
 		return "RankList [code=" + code + ", name=" + name + ", description=" + description + ", tag=" + tag
 				+ ", playNum=" + playNum + ", coverUrl=" + coverUrl + ", orderValue=" + orderValue + ", recommend="
-				+ recommend + ", status=" + status + ", previewMusicList=" + previewMusicList + "]";
+				+ recommend + ", status=" + status + ", previewMusicList=" + previewMusicList + ", musicCount="
+				+ musicCount + "]";
 	}
+	
 	
 }

@@ -1,4 +1,4 @@
-package spqbs.top;
+package spqbs.top.music.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,5 +44,10 @@ public class MusicController {
 	@RequestMapping("/statusOff/{code}")
 	public RestResult statusOff(@PathVariable String code){
 		return RestResult.success(musicServiceImpl.statusOff(code));
+	}
+	
+	@RequestMapping("/findMusicOne")
+	public RestResult findMusicOne(@RequestBody Music param){
+		return RestResult.success(musicServiceImpl.findMusicOne(param));
 	}
 }

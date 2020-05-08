@@ -2,6 +2,8 @@ package spqbs.top.music.service.impl;
 
 import java.util.List;
 import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spqbs.top.music.common.util.Page;
@@ -41,6 +43,10 @@ public class RanklistServiceImpl implements IRanklistService{
 			attachList.forEach(item -> {
 				item.setCode(UUID.randomUUID().toString().replace("-", ""));
 			});
+			RankList rank =new RankList();
+			rank.setCode(attachList.get(0).getRanklistCode());
+			rank.setMusicCount(attachList.size());
+			updateRankList(rank);
 		}
 		return musicMapper.addRankListAttach(attachList);
 	}
@@ -54,23 +60,26 @@ public class RanklistServiceImpl implements IRanklistService{
 		if (rank ==null){
 			return "fail";
 		}else{
-			if(!"".equals(param.getName())){
+			if(StringUtils.isNotBlank(param.getName())){
 				rank.setName(param.getName());
 			}
-			if(!"".equals(param.getDescription())){
+			if(StringUtils.isNotBlank(param.getDescription())){
 				rank.setDescription(param.getDescription());
 			}
-			if(!"".equals(param.getCoverUrl())){
+			if(StringUtils.isNotBlank(param.getCoverUrl())){
 				rank.setCoverUrl(param.getCoverUrl());
 			}
-			if(!"".equals(param.getTag())){
+			if(StringUtils.isNotBlank(param.getTag())){
 				rank.setTag(param.getTag());
 			}
-			if(!"".equals(param.getPlayNum())){
+			if(!"".equals(param.getPlayNum())&& param.getPlayNum() !=null){
 				rank.setPlayNum(param.getPlayNum());
 			}
-			if(!"".equals(param.getOrderValue())){
+			if(!"".equals(param.getOrderValue()) && param.getOrderValue() !=null ){
 				rank.setOrderValue(param.getOrderValue());
+			}
+			if(!"".equals(param.getMusicCount()) && param.getMusicCount() !=null ){
+				rank.setMusicCount(param.getMusicCount());
 			}
 			musicMapper.updateRankList(rank);
 		}
@@ -134,5 +143,10 @@ public class RanklistServiceImpl implements IRanklistService{
 	@Override
 	public Integer delRankList(String code) {
 		return musicMapper.delRankList(code);
+	}
+	@Override
+	public Integer delRankMusichByCode(String code,String rankCode) {
+		musicMapper.delRankMusichByCode(code);
+		return musicMapper.rankCountSub(rankCode);
 	}
 }

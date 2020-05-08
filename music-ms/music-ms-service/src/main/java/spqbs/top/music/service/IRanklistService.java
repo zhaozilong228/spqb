@@ -19,4 +19,5 @@ public interface IRanklistService {
     public String recommendOff(String code);
     public String updateOrderValue(RankList param );
     public Integer delRankList( String code );
+    public Integer delRankMusichByCode(String code,String rankCode);
 }

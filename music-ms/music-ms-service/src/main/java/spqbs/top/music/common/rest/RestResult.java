@@ -6,10 +6,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * rest接口的结果
+ * @author Liu Wenjie
  *
  */
-public class RestResult implements Serializable{
-	private static final long serialVersionUID = 1619207641955282314L;
+public class RestResult implements Serializable {
+
+	private static final long serialVersionUID = 1747811721479039229L;
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RestResult.class);
 
 	/**
@@ -109,4 +112,5 @@ public class RestResult implements Serializable{
 		return "RestResult [resultCode=" + resultCode + ", resultData=" + resultData + ", message=" + message
 				+ ", errorStackTrack=" + errorStackTrack + "]";
 	}
+	
 }

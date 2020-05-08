@@ -1,4 +1,4 @@
-package spqbs.top;
+package spqbs.top.music.controller;
 
 import java.util.List;
 
@@ -21,8 +21,9 @@ public class RankController {
 	@RequestMapping("/addRankList")
 	public RestResult addRankList(@RequestBody RankList saveParam  ){
 		saveParam.setStatus("102");
-		saveParam.setRecommend(101);
-		if(saveParam.getOrderValue() ==null){
+		saveParam.setRecommend(102);
+		saveParam.setMusicCount(0);
+		if("".equals(saveParam.getOrderValue()) && saveParam.getOrderValue() ==null){
 			saveParam.setOrderValue(0);
 		}
 		return RestResult.success(ranklistServiceImpl.addRankList(saveParam));
@@ -76,5 +77,10 @@ public class RankController {
 	@RequestMapping("/delRankList/{code}")
 	public RestResult delRankList(@PathVariable String code ){
 		return RestResult.success(ranklistServiceImpl.delRankList(code));
+	}
+	
+	@RequestMapping("/delRankMusichByCode")
+	public RestResult delRankMusichByCode(@RequestBody RankAttach delPram){
+		return RestResult.success(ranklistServiceImpl.delRankMusichByCode(delPram.getCode(),delPram.getRanklistCode()));
 	}
 }

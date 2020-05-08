@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="spqbs.top.music.dao.RecommendMapper">
+	<!-- =========================================================== -->
+	<!-- 查询的所有列 -->
+	<sql id="all_Column_List">
+		_THIS.id,
+		_THIS.recommend_date ,
+		_THIS.recommend_title ,
+		_THIS.music_name,
+		_THIS.music_code,
+		_THIS.album_name,
+		_THIS.artist_name
+	</sql>
+	
+	<sql id="all_Recommend_Column_List">
+		_THIS.id,
+		_THIS.theme ,
+		_THIS.cover_url ,
+		_THIS.date
+	</sql>
+	
+	<!-- 查询每日推荐 -->
+	<select id="findPageList" resultType="spqbs.top.music.model.RecommendAttach">
+		SELECT
+		<include refid="all_Column_List"></include>
+		FROM t_recommend_ref_attach _THIS
+		WHERE _THIS.del_flag = 0 AND _THIS.recommend_date = #{param.recommendDate}
+		ORDER BY _THIS.create_date DESC
+	</select>
+
+	<insert id="addRecommendAttach">
+		INSERT INTO t_recommend_ref_attach (
+		recommend_title,
+		recommend_date,
+		music_name,
+		music_code,
+		album_name,
+		artist_name
+		)
+		VALUES
+		<foreach collection="attachList" separator="," item="param">
+			(#{param.recommendTitle},#{param.recommendDate},
+			#{param.musicName},#{param.musicCode},#{param.albumName},#{param.artistName}
+			)
+		</foreach>
+	</insert>
+	
+	<!--  -->
+	<delete id="delRecommendListAttach">
+		DELETE
+		FROM
+		t_recommend_ref_attach
+		WHERE
+		recommend_date = #{param.recommendDate}
+	</delete>
+	
+	<delete id="delRecommendById">
+		DELETE
+		FROM
+		t_recommend_ref_attach
+		WHERE
+		id = #{param.id}
+	</delete>
+	
+	<select id="findRecommendByDate" resultType="spqbs.top.music.model.Recommend">
+		SELECT
+		<include refid="all_Recommend_Column_List"></include>
+		FROM t_recommend _THIS
+		WHERE _THIS.del_flag = 0 AND _THIS.date = #{param.date}
+		ORDER BY _THIS.create_date DESC
+	</select>
+	
+	<select id="findRecommendList" resultType="spqbs.top.music.model.Recommend">
+		SELECT
+		<include refid="all_Recommend_Column_List"></include>
+		FROM t_recommend _THIS
+		WHERE _THIS.del_flag = 0
+		<if test="param.startTime != null and param.startTime!='' and param.endTime != null and param.endTime!=''">
+		 AND date  between #{param.startTime} and #{param.endTime}
+		</if>
+		ORDER BY _THIS.id DESC
+		<if test="param.closePage == null">
+			LIMIT ${param.size * param.page},#{param.size}
+		</if>
+	</select>
+	
+	<insert id="addRecommend">
+		INSERT INTO t_recommend (
+		date
+		)
+		VALUES
+		(#{param.date})
+	</insert>
+	<update id="updateRecommend">
+		UPDATE t_recommend 
+		SET	
+		del_flag = 0
+		<if test="param.theme != null and param.theme!=''">
+		 ,theme = #{param.theme} 
+		</if>
+		<if test="param.coverUrl != null and param.coverUrl!=''">
+		 ,cover_url = #{param.coverUrl} 
+		</if> 
+		WHERE id = #{param.id}
+	</update>
+</mapper>
