@@ -16,6 +16,8 @@ public class PlayList extends PageableParam implements Serializable {
 	private Integer recommend;
 	private String status;
 	private Integer musicCount;
+	private String openId;
+	private Boolean favoriteFlag;
 	public String getCode() {
 		return code;
 	}
@@ -76,12 +78,24 @@ public class PlayList extends PageableParam implements Serializable {
 	public void setMusicCount(Integer musicCount) {
 		this.musicCount = musicCount;
 	}
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+	public Boolean getFavoriteFlag() {
+		return favoriteFlag;
+	}
+	public void setFavoriteFlag(Boolean favoriteFlag) {
+		this.favoriteFlag = favoriteFlag;
+	}
 	@Override
 	public String toString() {
 		return "PlayList [code=" + code + ", name=" + name + ", description=" + description + ", tag=" + tag
 				+ ", playNum=" + playNum + ", coverUrl=" + coverUrl + ", orderValue=" + orderValue + ", recommend="
-				+ recommend + ", status=" + status + ", musicCount=" + musicCount + "]";
+				+ recommend + ", status=" + status + ", musicCount=" + musicCount + ", openId=" + openId
+				+ ", favoriteFlag=" + favoriteFlag + "]";
 	}
-	 
 	
 }

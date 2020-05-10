@@ -24,7 +24,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		_THIS.playlist_name,
 		_THIS.play_num,
 		_THIS.music_count,
-		_THIS.open_id
+		_THIS.open_id,
+		_THIS.pic_url
 	</sql>
 	
 	<sql id="userPlayListAttach_Column_List">
@@ -42,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		_THIS.music_name,
 		_THIS.music_code,
 		_THIS.album_name,
-		_THIS.artist_name
+		_THIS.artist_name,
 		_THIS.play_num,
 		_THIS.open_id 
 	</sql>
@@ -105,12 +106,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		playlist_name,
 		play_num,
 		music_count,
-		open_id
+		open_id,
+		pic_url
 		)
 		VALUES
 		(
 		#{param.code},#{param.favoriteType},#{param.playlistCode},#{param.playlistName},
-		#{param.playNum},#{param.musicCount},#{param.openId}
+		#{param.playNum},#{param.musicCount},#{param.openId},#{param.picUrl}
 		)
 	</insert>
 	
@@ -214,7 +216,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<include refid="userLike_Column_List"></include>
 		FROM t_user_like _THIS
 		WHERE  
-		_THIS.del_flag = 0 AND _THIS.open_id = #{openId}
+		_THIS.del_flag = 0
+		<if test="param.openId != null and param.openId !=''">
+			 AND _THIS.open_id = #{param.openId}
+		</if>
+		<if test="param.code != null and param.code !=''">
+			 AND _THIS.music_code = #{param.code}
+		</if>
 	</select>
 	
 	<select id="findLikeMusicCount" resultType="Integer">
@@ -223,4 +231,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE  
 		_THIS.del_flag = 0 AND _THIS.open_id = #{openId}
 	</select>
+	
+	<!--  取消点赞-->
+	<delete id="delLike">
+		DELETE
+		FROM
+		t_user_like
+		WHERE
+		music_code = #{param.musicCode} AND open_id = #{param.openId}
+	</delete>
+	<!-- 根基openid和playlistCode 查歌曲 -->
+	<select id="findUserPalyByCodeAndOpenId" resultType="spqbs.top.music.model.Favorite">
+		SELECT 
+		<include refid="all_Favorite_Column_List"></include>
+		FROM t_user_favorite _THIS
+		WHERE  
+		_THIS.del_flag = 0 
+		AND _THIS.open_id = #{param.openId}
+		AND _THIS.playlist_code = #{param.playlistCode}
+	</select>
+	
+	<!--  取消收藏-->
+	<delete id="delFavorite">
+		DELETE
+		FROM
+		t_user_favorite
+		WHERE
+		playlist_code = #{param.playlistCode} AND open_id = #{param.openId}
+	</delete>
 </mapper>

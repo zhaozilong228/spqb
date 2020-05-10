@@ -20,6 +20,8 @@ public class Music extends PageableParam implements Serializable
 	private String artistName ;
 	private String status ;
 	private String lrcCode;
+	private String openId;
+	private Boolean likeFlag;
 	public String getCode() {
 		return code;
 	}
@@ -98,13 +100,26 @@ public class Music extends PageableParam implements Serializable
 	public void setLrcCode(String lrcCode) {
 		this.lrcCode = lrcCode;
 	}
+	
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+	public Boolean getLikeFlag() {
+		return likeFlag;
+	}
+	public void setLikeFlag(Boolean likeFlag) {
+		this.likeFlag = likeFlag;
+	}
 	@Override
 	public String toString() {
 		return "Music [code=" + code + ", name=" + name + ", url=" + url + ", coverUrl=" + coverUrl + ", description="
 				+ description + ", tag=" + tag + ", type=" + type + ", playNum=" + playNum + ", picUrl=" + picUrl
 				+ ", albumName=" + albumName + ", artistName=" + artistName + ", status=" + status + ", lrcCode="
-				+ lrcCode + "]";
+				+ lrcCode + ", openId=" + openId + ", likeFlag=" + likeFlag + "]";
 	}
-	
+	 
 	
 }

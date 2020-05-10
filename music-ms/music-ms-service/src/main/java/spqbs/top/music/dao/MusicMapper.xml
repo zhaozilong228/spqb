@@ -423,4 +423,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		del_flag = 1
 		WHERE code = #{code}
 	</update>
+	<update id="updateMusicPlayNum">
+		UPDATE t_music 
+		SET	
+		play_num = play_num +1
+		WHERE code = #{code}
+	</update>
+	<update id="updatePlayNum">
+		UPDATE t_playlist 
+		SET	
+		play_num = play_num +1
+		WHERE code = #{code}
+	</update>
+	<update id="updateRankPlayNum">
+		UPDATE t_ranklist 
+		SET	
+		play_num = play_num +1
+		WHERE code = #{code}
+	</update>
 </mapper>

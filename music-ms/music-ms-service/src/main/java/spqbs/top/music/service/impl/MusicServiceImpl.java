@@ -7,14 +7,19 @@ import org.springframework.stereotype.Service;
 
 import spqbs.top.music.common.util.Page;
 import spqbs.top.music.dao.MusicMapper;
+import spqbs.top.music.dao.UserMapper;
 import spqbs.top.music.model.Music;
 import spqbs.top.music.model.QueryMusicModel;
+import spqbs.top.music.model.UserLike;
 import spqbs.top.music.service.IMusicService;
 
 @Service(value="musicServiceImpl")
 public class MusicServiceImpl  implements IMusicService{
 	@Autowired
 	private MusicMapper musicMapper;
+	
+	@Autowired
+	private UserMapper userMapper;
 	public Page<Music> findList(QueryMusicModel param) {
 		List<Music> resultList =  musicMapper.findList( param);
 		param.setClosePage(true);
@@ -53,7 +58,11 @@ public class MusicServiceImpl  implements IMusicService{
 	}
 	@Override
 	public Music findMusicOne(Music param) {
-		return musicMapper.findMusicOne(param);
+		List<UserLike> UserLikeList =userMapper.findLikeMusic(param);
+		musicMapper.updateMusicPlayNum(param.getCode());
+		Music music = musicMapper.findMusicOne(param);
+		music.setLikeFlag(UserLikeList.size()>0);
+		return music;
 	}
 	
 

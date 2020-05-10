@@ -66,4 +66,24 @@ public class UserController {
 	public RestResult addLikeMusic(@RequestBody UserLike param){
 		return RestResult.success(userServiceImpl.addLikeMusic(param));
 	}
+	
+	@RequestMapping("/findLikeMusic")
+	public RestResult findLikeMusic(@RequestBody Music param){
+		return RestResult.success(userServiceImpl.findLikeMusic(param));
+	}
+	
+	@RequestMapping("/delLike")
+	public RestResult delLike(@RequestBody UserLike param){
+		return RestResult.success(userServiceImpl.delLike(param));
+	}
+	
+	@RequestMapping("/findUserPalyFavorite")
+	public RestResult findUserPalyFavorite(@RequestBody Favorite param){
+		return RestResult.success(userServiceImpl.findUserPalyByCodeAndOpenId(param));
+	}
+	
+	@RequestMapping("/delFavorite")
+	public RestResult delFavorite(@RequestBody Favorite param){
+		return RestResult.success(userServiceImpl.delFavorite(param));
+	}
 }

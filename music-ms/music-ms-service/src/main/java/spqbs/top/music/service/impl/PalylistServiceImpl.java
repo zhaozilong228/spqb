@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spqbs.top.music.common.util.Page;
 import spqbs.top.music.dao.MusicMapper;
+import spqbs.top.music.dao.UserMapper;
+import spqbs.top.music.model.Favorite;
 import spqbs.top.music.model.MusicAttach;
 import spqbs.top.music.model.PlayList;
 import spqbs.top.music.service.IPlaylistService;
@@ -16,10 +18,23 @@ import spqbs.top.music.service.IPlaylistService;
 public class PalylistServiceImpl implements IPlaylistService{
 	@Autowired
 	private MusicMapper musicMapper;
+	
+	@Autowired
+	private UserMapper userMapper;
+	
 	public Page<PlayList> findPlayList(PlayList param) {
 		List<PlayList> resultList =  musicMapper.findPlayList(param);
 		param.setClosePage(true);
 		List<PlayList> resulCount = musicMapper.findPlayList(param);
+		if(resultList.size()>0){
+			resultList.forEach((item)->{
+				Favorite favorite =new Favorite();
+				favorite.setPlaylistCode(item.getCode());
+				favorite.setOpenId(param.getOpenId());
+				List<Favorite> result = userMapper.findUserPalyByCodeAndOpenId(favorite);
+				item.setFavoriteFlag(result.size()>0);
+			});
+		}
 		return  new Page<PlayList>(resultList,resulCount.size());
 	}
 	public String addPlayList(PlayList saveParam) {
@@ -30,6 +45,7 @@ public class PalylistServiceImpl implements IPlaylistService{
 		return code;
 	}
 	public List<MusicAttach> findMusicByCode(String code) {
+		musicMapper.updatePlayNum(code);
 		return musicMapper.findMusicByCode(code);
 	}
 	public Integer addPlayListAttach(List<MusicAttach> SaveparamList) {

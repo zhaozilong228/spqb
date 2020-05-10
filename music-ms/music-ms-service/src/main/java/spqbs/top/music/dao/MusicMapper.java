@@ -22,6 +22,7 @@ public interface  MusicMapper {
     public Integer delete(@Param("code") String code );
     public Integer update(@Param("param") Music updateParam );
     public Music findMusicOne(@Param("param") Music param );
+    public Integer updateMusicPlayNum(@Param("code") String code );
     
     /**
      * 
@@ -38,6 +39,8 @@ public interface  MusicMapper {
     public Integer delPlayList(@Param("code") String code );
     public Integer delPlayListAttachByCode(@Param("code") String code);
     public Integer playCountSub(@Param("code") String code );
+    public Integer updatePlayNum(@Param("code") String code);
+    
     /**
      * @Description: TODO(√Ë ˆ)
      * @author zhao zilong
@@ -53,5 +56,7 @@ public interface  MusicMapper {
     public List<RankAttach> findRankByCodeTop(@Param("rankCode") String rankCode );
     public Integer delRankMusichByCode(@Param("code") String code);
     public Integer rankCountSub(@Param("code") String code);
+    public Integer updateRankPlayNum(@Param("code") String code);
+    
     
 }

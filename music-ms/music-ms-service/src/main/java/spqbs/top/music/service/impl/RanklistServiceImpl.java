@@ -52,6 +52,7 @@ public class RanklistServiceImpl implements IRanklistService{
 	}
 	@Override
 	public List<RankAttach> findRankByCode(String rankCode) {
+		musicMapper.updateRankPlayNum(rankCode);
 		return musicMapper.findRankByCode(rankCode);
 	}
 	@Override

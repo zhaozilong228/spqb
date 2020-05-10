@@ -1,5 +1,6 @@
 package spqbs.top.music.service;
 
+
 import spqbs.top.music.common.util.Page;
 import spqbs.top.music.model.Music;
 import spqbs.top.music.model.QueryMusicModel;
@@ -12,6 +13,4 @@ public interface IMusicService {
     public String statusOn(String code);
     public String statusOff(String code);
     public Music findMusicOne(Music param);
-    
-  
 }

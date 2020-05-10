@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spqbs.top.music.dao.UserMapper;
 import spqbs.top.music.model.Favorite;
+import spqbs.top.music.model.Music;
 import spqbs.top.music.model.MusicAttach;
 import spqbs.top.music.model.User;
 import spqbs.top.music.model.UserLike;
@@ -89,8 +90,8 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public List<UserLike> findLikeMusic(String openId) {
-		return userMapper.findLikeMusic(openId);
+	public List<UserLike> findLikeMusic(Music param) {
+		return userMapper.findLikeMusic(param);
 	}
 
 	@Override
@@ -120,6 +121,21 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public Integer findLikeMusicCount(String openId) {
 		return userMapper.findLikeMusicCount(openId);
+	}
+	
+	@Override
+	public Integer delLike(UserLike param) {
+		return userMapper.delLike(param);
+	}
+
+	@Override
+	public List<Favorite> findUserPalyByCodeAndOpenId(Favorite param) {
+		return userMapper.findUserPalyByCodeAndOpenId(param);
+	}
+
+	@Override
+	public Integer delFavorite(Favorite param) {
+		return userMapper.delFavorite(param);
 	}
 
 }

@@ -15,6 +15,7 @@ public class Favorite implements  Serializable{
 	private String playNum;
 	private String musicCount;
 	private String openId;
+	private String picUrl;
 	public String getCode() {
 		return code;
 	}
@@ -57,11 +58,18 @@ public class Favorite implements  Serializable{
 	public void setOpenId(String openId) {
 		this.openId = openId;
 	}
+	public String getPicUrl() {
+		return picUrl;
+	}
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
 	@Override
 	public String toString() {
 		return "Favorite [code=" + code + ", favoriteType=" + favoriteType + ", playlistCode=" + playlistCode
 				+ ", playlistName=" + playlistName + ", playNum=" + playNum + ", musicCount=" + musicCount + ", openId="
-				+ openId + "]";
+				+ openId + ", picUrl=" + picUrl + "]";
 	}
+	
 	
 }
